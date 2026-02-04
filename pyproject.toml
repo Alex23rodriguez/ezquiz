@@ -3,7 +3,7 @@ name = "ezquiz"
 version = "0.2.1"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 authors = [
   { name = "Alejandro Rodriguez", email = "alejandro.rodriguez@alexanderthamm.com" },
 ]
