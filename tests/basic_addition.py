@@ -47,4 +47,4 @@ game = APIGame(
     },
 )
 
-game.start()
+game.start(host="localhost", port=8000, root_path="/test")

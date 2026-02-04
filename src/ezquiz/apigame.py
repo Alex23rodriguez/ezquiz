@@ -1,6 +1,5 @@
 from pathlib import Path
 from random import choice
-from typing import Literal
 
 import uvicorn
 from fastapi import FastAPI, Request
@@ -21,6 +20,9 @@ class APIGame:
 
     def start(
         self,
+        *,
+        host: str,
+        port: int,
         **fastapi_kw,
     ):
         app = FastAPI(**fastapi_kw)
@@ -82,4 +84,4 @@ class APIGame:
                 }
             )
 
-        uvicorn.run(app)
+        uvicorn.run(app, host=host, port=port)
