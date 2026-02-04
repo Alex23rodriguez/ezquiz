@@ -262,7 +262,7 @@
         // Fetch next question
         async function fetchNextQuestion() {
             try {
-                const response = await fetch('/api/next', {
+                const response = await fetch('api/next', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -303,7 +303,7 @@
             }
 
             try {
-                const response = await fetch('/api/submit', {
+                const response = await fetch('api/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
