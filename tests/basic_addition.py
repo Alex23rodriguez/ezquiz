@@ -9,7 +9,7 @@ def get_ints():
 
 def ask_addition(t):
     a, b = t
-    return f"what is {a} + {b}"
+    return f"what is {a} + {b}?"
 
 
 def correct_addition(t):
@@ -23,6 +23,28 @@ AddQ = Q[tuple[int, int]](
 )
 
 
-game = APIGame("Basic Math Test", {"addition": AddQ})
+def ask_mult(t):
+    a, b = t
+    return f"what is {a} * {b}?"
+
+
+def correct_mult(t):
+    a, b = t
+    return a * b
+
+
+MultQ = Q[tuple[int, int]](
+    get_seed=get_ints,
+    ask=ask_mult,
+    correct=correct_mult,
+)
+
+game = APIGame(
+    "Basic Math Test",
+    {
+        "addition": AddQ,
+        "multiplication": MultQ,
+    },
+)
 
 game.start()
