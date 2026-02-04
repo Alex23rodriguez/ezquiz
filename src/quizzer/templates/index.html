@@ -85,12 +85,127 @@
         </div>
     </div>
 
+    <style>
+        .diff {
+            font-family: "Courier New", monospace;
+            font-size: 1.15em;
+            white-space: pre;
+            margin-top: 1rem;
+        }
+        .diff-row {
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        .diff-green {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .diff-red {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .diff-grey {
+            color: #9e9e9e;
+        }
+    </style>
     <script>
         // Store selected categories globally
         let selectedCategories = [];
         let currentQuestion = null;
         let questionNumber = 0;
         let showingResult = false;
+
+        // Text diff functions
+        function escapeChar(c) {
+            return c === " " ? "&nbsp;" : c;
+        }
+
+        function alignStrings(a, b) {
+            // Handle null/undefined inputs
+            a = a || "";
+            b = b || "";
+            
+            const dp = Array.from({ length: a.length + 1 }, () =>
+                Array(b.length + 1).fill(0),
+            );
+
+            for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+            for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    dp[i][j] =
+                        a[i - 1] === b[j - 1]
+                            ? dp[i - 1][j - 1]
+                            : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+                }
+            }
+
+            let i = a.length,
+                j = b.length;
+            let aAlign = "",
+                bAlign = "";
+
+            while (i > 0 || j > 0) {
+                if (i > 0 && j > 0 && a[i - 1] === b[j - 1]) {
+                    aAlign = a[i - 1] + aAlign;
+                    bAlign = b[j - 1] + bAlign;
+                    i--;
+                    j--;
+                } else if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + 1) {
+                    aAlign = a[i - 1] + aAlign;
+                    bAlign = b[j - 1] + bAlign;
+                    i--;
+                    j--;
+                } else if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
+                    aAlign = a[i - 1] + aAlign;
+                    bAlign = " " + bAlign;
+                    i--;
+                } else {
+                    aAlign = " " + aAlign;
+                    bAlign = b[j - 1] + bAlign;
+                    j--;
+                }
+            }
+
+            return { aAlign, bAlign };
+        }
+
+        function renderTextDiff(userAnswer, correctAnswer) {
+            // Handle null/undefined inputs
+            userAnswer = String(userAnswer || "");
+            correctAnswer = String(correctAnswer || "");
+            
+            const { aAlign, bAlign } = alignStrings(userAnswer, correctAnswer);
+
+            let top = "";
+            let bottom = "";
+
+            for (let i = 0; i < aAlign.length; i++) {
+                const a = aAlign[i];
+                const b = bAlign[i];
+
+                // TOP ROW (user input)
+                if (a === " " && b !== " ") {
+                    top += `<span class="diff-grey">-</span>`;
+                } else if (a === b) {
+                    top += `<span class="diff-green">${escapeChar(a)}</span>`;
+                } else if (a !== " ") {
+                    top += `<span class="diff-red">${escapeChar(a)}</span>`;
+                }
+
+                // BOTTOM ROW (reference)
+                if (b === " ") {
+                    bottom += " ";
+                } else if (a === b) {
+                    bottom += `<span class="diff-green">${escapeChar(b)}</span>`;
+                } else {
+                    bottom += `<span class="diff-grey">${escapeChar(b)}</span>`;
+                }
+            }
+
+            return `<div class="diff"><div class="diff-row">${top}</div><div class="diff-row">${bottom}</div></div>`;
+        }
 
         // Get DOM elements
         const setupView = document.getElementById('setup-view');
@@ -240,6 +355,20 @@
             const icon = isCorrect ? '✓' : '✗';
             const message = isCorrect ? 'Correct!' : 'Incorrect';
             
+            // Check if explanation is textdiff placeholder
+            const isTextDiff = data.explanation === "{textdiff}";
+            
+            let explanationHtml = '';
+            if (!isCorrect && isTextDiff) {
+                explanationHtml = `
+                    <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
+                        ${renderTextDiff(data.submitted_answer, data.correct_answer)}
+                    </div>
+                `;
+            } else if (!isCorrect && data.explanation) {
+                explanationHtml = `<div class="bg-blue-50 border-l-4 border-blue-500 p-4"><p class="text-gray-700"><strong>Explanation:</strong> ${data.explanation}</p></div>`;
+            }
+            
             resultContainer.innerHTML = `
                 <div class="${bgColor} border-l-4 ${isCorrect ? 'border-green-500' : 'border-red-500'} p-4 mb-4">
                     <div class="flex items-center">
@@ -247,11 +376,11 @@
                         <div>
                             <p class="font-bold ${textColor} text-lg">${message}</p>
                             <p class="text-gray-600 mt-1">Your answer: <span class="font-semibold">${data.submitted_answer}</span></p>
-                            ${!isCorrect ? `<p class="text-gray-600 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
+                            ${!isCorrect && !isTextDiff ? `<p class="text-gray-600 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
                         </div>
                     </div>
                 </div>
-                ${data.explanation ? `<div class="bg-blue-50 border-l-4 border-blue-500 p-4"><p class="text-gray-700"><strong>Explanation:</strong> ${data.explanation}</p></div>` : ''}
+                ${explanationHtml}
                 <div class="mt-4 text-sm text-gray-500 text-center">Press Enter to continue</div>
             `;
             
