@@ -28,7 +28,7 @@ class Q(Generic[T]):
             self.check = check
 
         if explain is None:
-            self.explain = lambda _: "<textdiff>"
+            self.explain = lambda _: "{textdiff}"
 
         else:
             self.explain = explain

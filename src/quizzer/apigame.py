@@ -52,7 +52,6 @@ class APIGame:
             q = self.qs[cat]
             seed = q.get_seed()
             prompt = q.ask(seed)
-            print(prompt)
 
             return JSONResponse(
                 {
