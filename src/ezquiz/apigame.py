@@ -21,10 +21,9 @@ class APIGame:
 
     def start(
         self,
-        mode: Literal["timed", "score", "mistakes", "total", "streak"] = "score",
-        param=10,
+        **fastapi_kw,
     ):
-        app = FastAPI()
+        app = FastAPI(**fastapi_kw)
 
         templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
