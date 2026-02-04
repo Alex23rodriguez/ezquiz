@@ -44,6 +44,7 @@ class APIGame:
             """Get the next question in the session."""
             # return a random question from selected categories
             data = await request.json()
+            print(data)
             categories = data.get("categories", [])
 
             # Get all available questions from selected categories
@@ -63,6 +64,7 @@ class APIGame:
         @app.post("/api/submit", response_class=JSONResponse)
         async def submit_answer(request: Request):
             data = await request.json()
+            print(data)
             cat = data["category"]
             seed = data["seed"]
             submitted_ans = data["answer"]
