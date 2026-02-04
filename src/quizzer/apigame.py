@@ -61,10 +61,10 @@ class APIGame:
                 }
             )
 
-        @app.post("api/submit", response_class=JSONResponse)
+        @app.post("/api/submit", response_class=JSONResponse)
         async def submit_answer(request: Request):
             data = await request.json()
-            cat = data["cat"]
+            cat = data["category"]
             seed = data["seed"]
             submitted_ans = data["answer"]
 

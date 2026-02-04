@@ -16,18 +16,13 @@ def correct_addition(t):
     return t[0] + t[1]
 
 
-def explain(t):
-    return t
-
-
 AddQ = Q[tuple[int, int]](
     get_seed=get_ints,
     ask=ask_addition,
     correct=correct_addition,
-    explain=explain,
 )
 
 
-game = APIGame("Basic Test", {"test": AddQ})
+game = APIGame("Basic Math Test", {"addition": AddQ})
 
 game.start()
