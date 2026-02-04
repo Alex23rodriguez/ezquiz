@@ -12,10 +12,23 @@ class Q(Generic[T]):
         self,
         get_seed: Callable[[], T],
         ask: Callable[[T], str],
-        check: Callable[[T, str], bool],
-        explain: Callable[[T], Explain] | None,
+        correct: Callable[[T], str],
+        check: Callable[[T, str], bool] | None = None,
+        explain: Callable[[T], Explain] | None = None,
     ):
         self.get_seed = get_seed
         self.ask = ask
-        self.check = check
-        self.explain = explain
+        self.correct = correct
+
+        if check is None:
+            self.check = (
+                lambda correct_ans, submitted_ans: str(correct_ans) == submitted_ans
+            )
+        else:
+            self.check = check
+
+        if explain is None:
+            self.explain = lambda _: "<textdiff>"
+
+        else:
+            self.explain = explain

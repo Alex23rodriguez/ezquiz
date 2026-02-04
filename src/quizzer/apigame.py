@@ -54,17 +54,31 @@ class APIGame:
             prompt = q.ask(seed)
             print(prompt)
 
-            # available = []
-            # for category in categories:
-            #     if category in MOCK_QUESTIONS:
-            #         available.extend(MOCK_QUESTIONS[category])
-
-            # For this mock, we'll just return a random question
-            # In a real app, you'd track which questions have been asked in the session
             return JSONResponse(
                 {
                     "complete": False,
-                    "question": {"id": seed, "text": prompt},
+                    "question": {"category": cat, "seed": seed, "text": prompt},
+                }
+            )
+
+        @app.post("api/submit", response_class=JSONResponse)
+        async def submit_answer(request: Request):
+            data = await request.json()
+            cat = data["cat"]
+            seed = data["seed"]
+            submitted_ans = data["answer"]
+
+            q = self.qs[cat]
+            correct_ans = q.correct(seed)
+            correct = q.check(correct_ans, submitted_ans)
+            explain = q.explain(seed)
+
+            return JSONResponse(
+                {
+                    "correct": correct,
+                    "submitted_answer": submitted_ans,
+                    "correct_answer": correct_ans,
+                    "explanation": explain,
                 }
             )
 

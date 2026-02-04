@@ -12,8 +12,8 @@ def ask_addition(t):
     return f"what is {a} + {b}"
 
 
-def check_addition(t, ans: str):
-    return t[0] + t[1] == int(ans)
+def correct_addition(t):
+    return t[0] + t[1]
 
 
 def explain(t):
@@ -23,7 +23,7 @@ def explain(t):
 AddQ = Q[tuple[int, int]](
     get_seed=get_ints,
     ask=ask_addition,
-    check=check_addition,
+    correct=correct_addition,
     explain=explain,
 )
 
