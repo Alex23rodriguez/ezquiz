@@ -183,7 +183,7 @@ wheels = [
 ]
 
 [[package]]
-name = "quizzer"
+name = "ezquiz"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [

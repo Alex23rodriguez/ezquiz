@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
-from quizzer.quizzer import Q
+from ezquiz.ezquiz import Q
 
 
 class APIGame:

@@ -1,6 +1,6 @@
 from random import randint
 
-from quizzer import APIGame, Q
+from ezquiz import APIGame, Q
 
 
 def get_ints():
