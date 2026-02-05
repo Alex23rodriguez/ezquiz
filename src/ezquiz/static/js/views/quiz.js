@@ -16,6 +16,8 @@ const selectedCategoriesDisplay = document.getElementById('selected-categories-d
 const submitBtn = document.getElementById('submit-btn');
 const questionContainer = document.getElementById('question-container');
 const resultContainer = document.getElementById('result-container');
+const contextContainer = document.getElementById('context-container');
+const questionContext = document.getElementById('question-context');
 
 /**
  * Display the quiz interface with current question
@@ -35,6 +37,15 @@ export function showQuiz() {
   selectedCategoriesDisplay.textContent = state.selectedCategories.join(', ');
   
   const question = state.currentQuestion;
+  
+  // Display context if present
+  if (question.context) {
+    questionContext.textContent = question.context;
+    contextContainer.classList.remove('hidden');
+  } else {
+    contextContainer.classList.add('hidden');
+    questionContext.textContent = '';
+  }
   
   if (question.type === 'fill') {
     renderFillQuestion(question);

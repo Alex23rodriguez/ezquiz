@@ -12,16 +12,14 @@ class Q(Generic[T]):
     def __init__(
         self,
         get_seed: Callable[[], T],
-        ask: Callable[[T], str],
+        ask: Callable[[T], str | dict],
         correct: Callable[[T], str],
         check: Callable[[T, str], bool] | None = None,
         explain: Callable[[T], Explain] | None = None,
-        question_type: Literal["simple", "fill"] = "simple",
     ):
         self.get_seed = get_seed
         self.ask = ask
         self.correct = correct
-        self.question_type = question_type
 
         if check is None:
             self.check = (

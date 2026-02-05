@@ -1,6 +1,8 @@
+from random import choice
+
 from ezquiz import APIGame, Q
 
-# Misc fill questions using Q.from_dict
+# Misc fill questions using Q.from_dict (returns strings, type="simple" inferred)
 MiscQ = Q.from_dict(
     {
         "The capital of France is [...].": "Paris",
@@ -9,7 +11,6 @@ MiscQ = Q.from_dict(
         "The chemical symbol for gold is [...].": "Au",
         "Shakespeare wrote [...].": "Hamlet",
     },
-    question_type="fill",
 )
 
 # Math fill questions using Q.from_dict
@@ -21,17 +22,6 @@ MathFillQ = Q.from_dict(
         "10 - [...] = 3": "7",
         "[...] + 15 = 30": "15",
     },
-    question_type="fill",
-)
-
-# Simple addition using Q.from_dicts with multiple categories
-simple_questions = Q.from_dicts(
-    [
-        {"What is 2 + 2?": "4", "What is 5 + 3?": "8", "What is 10 + 5?": "15"},
-        {"What is 3 * 4?": "12", "What is 6 * 7?": "42", "What is 8 * 9?": "72"},
-    ],
-    ["easy_addition", "easy_multiplication"],
-    question_type="simple",
 )
 
 # Fill word problems using Q.from_dict
@@ -41,7 +31,39 @@ FillMathQ = Q.from_dict(
         "A rectangle has width 5 and length [...], so its area is 35.": "7",
         "The temperature was 20°C, then dropped [...] degrees to reach 12°C.": "8",
     },
-    question_type="fill",
+)
+
+# Spanish question with context - ask returns a dict
+spanish_phrases = [
+    ("Mi [...] es John!", "nombre", "My name is John!"),
+    ("Hola, ¿cómo [...]?", "estás", "Hello, how are you?"),
+    ("Buenos [...]", "días", "Good morning"),
+]
+
+SpanishQ = Q[tuple](
+    get_seed=lambda: choice(spanish_phrases),
+    ask=lambda seed: {
+        "text": seed[0],
+        "type": "fill",
+        "context": seed[2],
+    },
+    correct=lambda seed: seed[1],
+)
+
+# Another example: Math problem with context
+math_context_problems = [
+    ("[...] + 5 = 12", "7", "Solve for the missing number"),
+    ("3 * [...] = 27", "9", "Find the factor"),
+]
+
+MathContextQ = Q[tuple](
+    get_seed=lambda: choice(math_context_problems),
+    ask=lambda seed: {
+        "text": seed[0],
+        "type": "fill",
+        "context": seed[2],
+    },
+    correct=lambda seed: seed[1],
 )
 
 game = APIGame(
@@ -50,7 +72,8 @@ game = APIGame(
         "misc_fill": MiscQ,
         "math_fill": MathFillQ,
         "fill_word_problems": FillMathQ,
-        **simple_questions,
+        "spanish": SpanishQ,
+        "math_context": MathContextQ,
     },
 )
 
