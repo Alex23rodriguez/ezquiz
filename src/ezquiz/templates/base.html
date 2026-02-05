@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .diff {
+            font-family: "Courier New", monospace;
+            font-size: 1.15em;
+            white-space: pre;
+            margin-top: 1rem;
+        }
+        .diff-row {
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        .diff-green {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .diff-red {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .diff-grey {
+            color: #9e9e9e;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        {% block content %}{% endblock %}
+    </div>
+    <script type="module" src="static/js/main.js"></script>
+</body>
+</html>
