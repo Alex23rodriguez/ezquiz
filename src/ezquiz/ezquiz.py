@@ -39,7 +39,7 @@ class Q(Generic[T]):
     @classmethod
     def from_dict(cls, dct: dict, **kwargs):
         return cls(
-            get_seed=lambda: choice(dct),
+            get_seed=lambda: choice(list(dct.keys())),
             ask=lambda seed: str(seed),
             correct=lambda seed: dct[seed],
             **kwargs,
