@@ -2,7 +2,7 @@ from random import choice
 
 from ezquiz import APIGame, Q
 
-# Misc fill questions using Q.from_dict (returns strings, type="simple" inferred)
+# Misc fill questions using Q.from_dict
 MiscQ = Q.from_dict(
     {
         "The capital of France is [...].": "Paris",
@@ -11,6 +11,7 @@ MiscQ = Q.from_dict(
         "The chemical symbol for gold is [...].": "Au",
         "Shakespeare wrote [...].": "Hamlet",
     },
+    question_type="fill",
 )
 
 # Math fill questions using Q.from_dict

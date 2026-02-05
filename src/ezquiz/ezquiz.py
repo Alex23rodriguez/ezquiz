@@ -35,12 +35,12 @@ class Q(Generic[T]):
             self.explain = explain
 
     @classmethod
-    def from_dict(cls, dct: dict, **kwargs):
+    def from_dict(cls, dct: dict, question_type: str = "simple", **kwargs):
         return cls(
             get_seed=lambda: choice(list(dct.keys())),
             ask=lambda seed: {
                 "text": str(seed),
-                "type": "simple",
+                "type": question_type,
                 "context": "",
                 "hints": [],
             },
