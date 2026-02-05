@@ -1,54 +1,49 @@
-from random import choice, randint
+from random import randint
 
 from ezquiz import APIGame, Q
 
 
-# Simple fill-in-the-blank questions
-
-# Geography fill questions
-geography_questions = {
-    "The capital of France is [...].": "Paris",
-    "The largest planet in our solar system is [...].": "Jupiter",
-    "Water freezes at [...] degrees Celsius.": "0",
-    "The chemical symbol for gold is [...].": "Au",
-    "Shakespeare wrote [...].": "Hamlet",
-}
-
-GeographyQ = Q[str](
-    get_seed=lambda: choice(list(geography_questions.keys())),
-    ask=lambda seed: seed,
-    correct=lambda seed: geography_questions[seed],
+# Geography fill questions using Q.from_dict
+GeographyQ = Q.from_dict(
+    {
+        "The capital of France is [...].": "Paris",
+        "The largest planet in our solar system is [...].": "Jupiter",
+        "Water freezes at [...] degrees Celsius.": "0",
+        "The chemical symbol for gold is [...].": "Au",
+        "Shakespeare wrote [...].": "Hamlet",
+    },
     question_type="fill",
 )
 
-# Math fill questions
-math_fill_questions = {
-    "2 + [...] = 5": "3",
-    "[...] * 7 = 49": "7",
-    "The square root of [...] is 8.": "64",
-    "10 - [...] = 3": "7",
-    "[...] + 15 = 30": "15",
-}
-
-MathFillQ = Q[str](
-    get_seed=lambda: choice(list(math_fill_questions.keys())),
-    ask=lambda seed: seed,
-    correct=lambda seed: math_fill_questions[seed],
+# Math fill questions using Q.from_dict
+MathFillQ = Q.from_dict(
+    {
+        "2 + [...] = 5": "3",
+        "[...] * 7 = 49": "7",
+        "The square root of [...] is 8.": "64",
+        "10 - [...] = 3": "7",
+        "[...] + 15 = 30": "15",
+    },
     question_type="fill",
 )
 
-# Mixed: some simple, some fill
-SimpleQ = Q[tuple[int, int]](
-    get_seed=lambda: (randint(1, 20), randint(1, 20)),
-    ask=lambda t: f"What is {t[0]} + {t[1]}?",
-    correct=lambda t: str(t[0] + t[1]),
+# Simple addition using Q.from_dicts with multiple categories
+simple_questions = Q.from_dicts(
+    [
+        {"What is 2 + 2?": "4", "What is 5 + 3?": "8", "What is 10 + 5?": "15"},
+        {"What is 3 * 4?": "12", "What is 6 * 7?": "42", "What is 8 * 9?": "72"},
+    ],
+    ["easy_addition", "easy_multiplication"],
     question_type="simple",
 )
 
-FillMathQ = Q[tuple[int, int]](
-    get_seed=lambda: (randint(1, 10), randint(1, 10)),
-    ask=lambda t: f"If you have {t[0]} apples and get [...] more, you'll have {t[0] + t[1]} apples.",
-    correct=lambda t: str(t[1]),
+# Fill word problems using Q.from_dict
+FillMathQ = Q.from_dict(
+    {
+        "If you have 3 apples and get [...] more, you'll have 7 apples.": "4",
+        "A rectangle has width 5 and length [...], so its area is 35.": "7",
+        "The temperature was 20°C, then dropped [...] degrees to reach 12°C.": "8",
+    },
     question_type="fill",
 )
 
@@ -57,8 +52,8 @@ game = APIGame(
     {
         "geography_fill": GeographyQ,
         "math_fill": MathFillQ,
-        "simple_addition": SimpleQ,
         "fill_word_problems": FillMathQ,
+        **simple_questions,
     },
 )
 
