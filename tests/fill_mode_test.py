@@ -1,10 +1,7 @@
-from random import randint
-
 from ezquiz import APIGame, Q
 
-
-# Geography fill questions using Q.from_dict
-GeographyQ = Q.from_dict(
+# Misc fill questions using Q.from_dict
+MiscQ = Q.from_dict(
     {
         "The capital of France is [...].": "Paris",
         "The largest planet in our solar system is [...].": "Jupiter",
@@ -50,7 +47,7 @@ FillMathQ = Q.from_dict(
 game = APIGame(
     "Fill Mode Test",
     {
-        "geography_fill": GeographyQ,
+        "misc_fill": MiscQ,
         "math_fill": MathFillQ,
         "fill_word_problems": FillMathQ,
         **simple_questions,
