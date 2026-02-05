@@ -1,3 +1,4 @@
+from random import choice
 from typing import Callable, Generic, Literal, TypedDict, TypeVar
 
 T = TypeVar("T")
@@ -32,3 +33,22 @@ class Q(Generic[T]):
 
         else:
             self.explain = explain
+
+    @classmethod
+    def from_dict(cls, dct: dict):
+        return cls(
+            get_seed=lambda: choice(dct),
+            ask=lambda seed: str(seed),
+            correct=lambda seed: dct[seed],
+        )
+
+    @classmethod
+    def from_dicts(cls, dcts: list[dict], names: list, include_reverse=False):
+        assert len(dcts) == len(names)
+        qs = {name: cls.from_dict(d) for name, d in zip(names, dcts)}
+
+        if include_reverse:
+            for name, d in zip(names, dcts):
+                qs[name] = cls.from_dict({val: key for key, val in d.items()})
+
+        return qs
