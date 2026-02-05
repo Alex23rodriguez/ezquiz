@@ -9,7 +9,10 @@ def get_ints():
 
 def ask_addition(t):
     a, b = t
-    return f"what is {a} + {b}?"
+    return {
+        "text": f"what is {a} + {b}?",
+        "type": "simple",
+    }
 
 
 def correct_addition(t):
@@ -25,7 +28,10 @@ AddQ = Q[tuple[int, int]](
 
 def ask_mult(t):
     a, b = t
-    return f"what is {a} * {b}?"
+    return {
+        "text": f"what is {a} * {b}?",
+        "type": "simple",
+    }
 
 
 def correct_mult(t):

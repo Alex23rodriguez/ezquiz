@@ -12,7 +12,7 @@ class Q(Generic[T]):
     def __init__(
         self,
         get_seed: Callable[[], T],
-        ask: Callable[[T], str | dict],
+        ask: Callable[[T], dict],
         correct: Callable[[T], str],
         check: Callable[[T, str], bool] | None = None,
         explain: Callable[[T], Explain] | None = None,
@@ -38,18 +38,12 @@ class Q(Generic[T]):
     def from_dict(cls, dct: dict, **kwargs):
         return cls(
             get_seed=lambda: choice(list(dct.keys())),
-            ask=lambda seed: str(seed),
+            ask=lambda seed: {
+                "text": str(seed),
+                "type": "simple",
+                "context": "",
+                "hints": [],
+            },
             correct=lambda seed: dct[seed],
             **kwargs,
         )
-
-    @classmethod
-    def from_dicts(cls, dcts: list[dict], names: list, include_reverse=False, **kwargs):
-        assert len(dcts) == len(names)
-        qs = {name: cls.from_dict(d, **kwargs) for name, d in zip(names, dcts)}
-
-        if include_reverse:
-            for name, d in zip(names, dcts):
-                qs[name] = cls.from_dict({val: key for key, val in d.items()}, **kwargs)
-
-        return qs

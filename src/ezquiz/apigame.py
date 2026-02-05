@@ -61,31 +61,17 @@ class APIGame:
             seed = q.get_seed()
             prompt = q.ask(seed)
 
-            # Handle both string and dict returns from ask
-            if isinstance(prompt, str):
-                question_data = {
-                    "category": cat,
-                    "seed": seed,
-                    "text": prompt,
-                    "type": "simple",
-                    "context": "",
-                    "hints": [],
-                }
-            else:
-                # Dict return - extract fields with defaults
-                question_data = {
-                    "category": cat,
-                    "seed": seed,
-                    "text": prompt["text"],
-                    "type": prompt.get("type", "simple"),
-                    "context": prompt.get("context", ""),
-                    "hints": prompt.get("hints", []),
-                }
-
             return JSONResponse(
                 {
                     "complete": False,
-                    "question": question_data,
+                    "question": {
+                        "category": cat,
+                        "seed": seed,
+                        "text": prompt["text"],
+                        "type": prompt.get("type", "simple"),
+                        "context": prompt.get("context", ""),
+                        "hints": prompt.get("hints", []),
+                    },
                 }
             )
 
