@@ -19,6 +19,7 @@ const resultContainer = document.getElementById('result-container');
 
 /**
  * Display the quiz interface with current question
+ * Supports both "simple" and "fill" question types
  */
 export function showQuiz() {
   setupView.classList.add('hidden');
@@ -30,11 +31,83 @@ export function showQuiz() {
   questionContainer.classList.remove('hidden');
   submitBtn.textContent = 'Submit Answer (Enter)';
   
-  questionText.textContent = state.currentQuestion.text;
   questionCounter.textContent = `Question ${state.questionNumber}`;
   selectedCategoriesDisplay.textContent = state.selectedCategories.join(', ');
-  answerInput.value = '';
-  answerInput.focus();
+  
+  const question = state.currentQuestion;
+  
+  if (question.type === 'fill') {
+    renderFillQuestion(question);
+  } else {
+    renderSimpleQuestion(question);
+  }
+}
+
+/**
+ * Render a simple question with text and input field below
+ * @param {Object} question - Question object with text
+ */
+function renderSimpleQuestion(question) {
+  questionContainer.innerHTML = `
+    <p id="question-text" class="text-xl text-gray-800 mb-4">${escapeHtml(question.text)}</p>
+    <input type="text" id="answer-input" 
+           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+           placeholder="Your answer...">
+  `;
+  
+  const input = document.getElementById('answer-input');
+  if (input) {
+    input.focus();
+  }
+}
+
+/**
+ * Render a fill-in-the-blank question with inline input
+ * @param {Object} question - Question object with text containing [...]
+ */
+function renderFillQuestion(question) {
+  const parts = question.text.split('[...]');
+  
+  if (parts.length !== 2) {
+    // Fallback to simple if [...] not found or appears multiple times
+    renderSimpleQuestion(question);
+    return;
+  }
+  
+  questionContainer.innerHTML = `
+    <div class="fill-container text-xl text-gray-800">
+      <span>${escapeHtml(parts[0])}</span>
+      <input type="text" id="answer-input" 
+             class="inline-input"
+             placeholder="">
+      <span>${escapeHtml(parts[1])}</span>
+    </div>
+  `;
+  
+  const input = document.getElementById('answer-input');
+  if (input) {
+    input.focus();
+  }
+}
+
+/**
+ * Escape HTML special characters
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped text
+ */
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+/**
+ * Get the current answer from the input field
+ * @returns {string} The answer value
+ */
+function getAnswer() {
+  const input = document.getElementById('answer-input');
+  return input ? input.value.trim() : '';
 }
 
 /**
@@ -61,7 +134,7 @@ async function handleSubmit() {
     return;
   }
 
-  const answer = answerInput.value.trim();
+  const answer = getAnswer();
   
   if (!answer) {
     alert('Please enter an answer');

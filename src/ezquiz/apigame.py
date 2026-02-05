@@ -64,7 +64,13 @@ class APIGame:
             return JSONResponse(
                 {
                     "complete": False,
-                    "question": {"category": cat, "seed": seed, "text": prompt},
+                    "question": {
+                        "category": cat,
+                        "seed": seed,
+                        "text": prompt,
+                        "type": q.question_type,
+                        "hints": [],
+                    },
                 }
             )
 
