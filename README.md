@@ -188,3 +188,28 @@ Q.from_dict(
 )
 # Only accepts: "AbC123"
 ```
+
+## Roadmap
+
+Planned features and enhancements:
+
+### Question Types & Media
+- **Multiple Choice**: Support for multiple choice questions with customizable options
+- **Images**: Display images alongside or within questions
+- **Audio**: Play audio clips for listening comprehension or music theory quizzes
+
+### Analytics & Statistics
+- **Quiz Performance**: Track correct/incorrect answers per quiz and category
+- **Progress Tracking**: View learning progress over time
+- **Session History**: Review past quiz sessions and results
+
+### Question Selection & Weighting
+- **Weighted Probability**: Configure question selection probability based on performance
+- **Spaced Repetition**: Prioritize questions based on difficulty and recall success
+- **Category Weighting**: Adjust frequency of questions from different categories
+
+### Settings & Customization
+- **Explanation Toggle**: Option to show/hide explanations after answers
+- **Timed Quizzes**: Add time limits per question or per quiz
+- **Retry Options**: Allow multiple attempts on incorrect answers
+- **Quiz Length**: Configure number of questions per session
