@@ -9,7 +9,7 @@
  * @returns {string} Escaped character
  */
 function escapeChar(c) {
-  return c === " " ? "&nbsp;" : c;
+  return c === "_" ? "&nbsp;" : c;
 }
 
 /**
@@ -21,7 +21,7 @@ function escapeChar(c) {
 function alignStrings(a, b) {
   a = a || "";
   b = b || "";
-  
+
   const dp = Array.from({ length: a.length + 1 }, () =>
     Array(b.length + 1).fill(0),
   );
@@ -77,7 +77,7 @@ function alignStrings(a, b) {
 export function renderTextDiff(userAnswer, correctAnswer) {
   userAnswer = String(userAnswer || "");
   correctAnswer = String(correctAnswer || "");
-  
+
   const { aAlign, bAlign } = alignStrings(userAnswer, correctAnswer);
 
   let top = "";
@@ -98,7 +98,7 @@ export function renderTextDiff(userAnswer, correctAnswer) {
 
     // BOTTOM ROW (reference)
     if (b === " ") {
-      bottom += " ";
+      bottom += `<span class="diff-grey">${"_"}</span>`;
     } else if (a === b) {
       bottom += `<span class="diff-green">${escapeChar(b)}</span>`;
     } else {
