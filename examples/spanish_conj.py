@@ -44,17 +44,81 @@ def correct(seed):
     return stem + endings[ending]
 
 
-# Create the conjugation quiz
+# Create the regular verbs quiz
 spanish_verbs_q = Q[tuple](
     get_seed=get_seed,
     ask=ask,
     correct=correct,
 )
 
+
+# Irregular verbs with their full conjugations
+irregular_verbs = {
+    "ser": {
+        "Yo": "soy",
+        "Tú": "eres",
+        "Él/Ella": "es",
+        "Nosotros": "somos",
+        "Ellos": "son",
+    },
+    "ir": {
+        "Yo": "voy",
+        "Tú": "vas",
+        "Él/Ella": "va",
+        "Nosotros": "vamos",
+        "Ellos": "van",
+    },
+    "tener": {
+        "Yo": "tengo",
+        "Tú": "tienes",
+        "Él/Ella": "tiene",
+        "Nosotros": "tenemos",
+        "Ellos": "tienen",
+    },
+}
+
+irregular_subjects = ["Yo", "Tú", "Él/Ella", "Nosotros", "Ellos"]
+
+
+def get_irregular_seed():
+    """Randomly select an irregular verb and subject."""
+    verb = choice(list(irregular_verbs.keys()))
+    subject = choice(irregular_subjects)
+    return (verb, subject)
+
+
+def ask_irregular(seed):
+    """Create an irregular verb conjugation question."""
+    verb, subject = seed
+    return {
+        "text": f"{subject} [...] ({verb})",
+        "type": "fill",
+        "context": f"Conjugate the verb '{verb}' for '{subject}'",
+    }
+
+
+def correct_irregular(seed):
+    """Return the correctly conjugated irregular verb."""
+    verb, subject = seed
+    return irregular_verbs[verb][subject]
+
+
+# Create the irregular verbs quiz
+spanish_irregular_q = Q[tuple](
+    get_seed=get_irregular_seed,
+    ask=ask_irregular,
+    correct=correct_irregular,
+)
+
 # create server
 if __name__ == "__main__":
     game = APIGame()
     game.add_quiz(
-        subpath="spanish", title="Spanish verbs", qs={"regular verbs": spanish_verbs_q}
+        subpath="spanish",
+        title="Spanish verbs",
+        qs={
+            "regular verbs": spanish_verbs_q,
+            "irregular verbs": spanish_irregular_q,
+        },
     )
     game.start(host="localhost", port=8000)
