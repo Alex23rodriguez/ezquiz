@@ -24,8 +24,9 @@ export function showResult(data) {
   submitBtn.textContent = 'Next Question (Enter)';
   
   const isCorrect = data.correct;
-  const bgColor = isCorrect ? 'bg-green-100' : 'bg-red-100';
-  const textColor = isCorrect ? 'text-green-800' : 'text-red-800';
+  const bgColor = isCorrect ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30';
+  const textColor = isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300';
+  const borderColor = isCorrect ? 'border-green-500 dark:border-green-600' : 'border-red-500 dark:border-red-600';
   const icon = isCorrect ? '✓' : '✗';
   const message = isCorrect ? 'Correct!' : 'Incorrect';
   
@@ -36,28 +37,28 @@ export function showResult(data) {
     
     if (exp.type === "text_diff") {
       explanationHtml = `
-        <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
+        <div class="bg-gray-50 dark:bg-gray-700 border-l-4 border-gray-400 dark:border-gray-500 p-4">
           ${renderTextDiff(data.submitted_answer, data.correct_answer)}
         </div>
       `;
     } else if (exp.type === "text") {
-      explanationHtml = `<div class="bg-blue-50 border-l-4 border-blue-500 p-4"><p class="text-gray-700"><strong>Explanation:</strong> ${exp.value}</p></div>`;
+      explanationHtml = `<div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 dark:border-blue-600 p-4"><p class="text-gray-700 dark:text-gray-300"><strong>Explanation:</strong> ${exp.value}</p></div>`;
     }
   }
   
   resultContainer.innerHTML = `
-    <div class="${bgColor} border-l-4 ${isCorrect ? 'border-green-500' : 'border-red-500'} p-4 mb-4">
+    <div class="${bgColor} border-l-4 ${borderColor} p-4 mb-4">
       <div class="flex items-center">
         <span class="text-2xl mr-3">${icon}</span>
         <div>
           <p class="font-bold ${textColor} text-lg">${message}</p>
-          <p class="text-gray-600 mt-1">Your answer: <span class="font-semibold">${data.submitted_answer}</span></p>
-          ${!isCorrect ? `<p class="text-gray-600 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
+          <p class="text-gray-600 dark:text-gray-400 mt-1">Your answer: <span class="font-semibold">${data.submitted_answer}</span></p>
+          ${!isCorrect ? `<p class="text-gray-600 dark:text-gray-400 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
         </div>
       </div>
     </div>
     ${explanationHtml}
-    <div class="mt-4 text-sm text-gray-500 text-center">Press Enter to continue</div>
+    <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">Press Enter to continue</div>
   `;
   
   // Blur focus to prevent double submission

@@ -60,9 +60,9 @@ export function showQuiz() {
  */
 function renderSimpleQuestion(question) {
   questionContainer.innerHTML = `
-    <p id="question-text" class="text-xl text-gray-800 mb-4">${escapeHtml(question.text)}</p>
+    <p id="question-text" class="text-xl text-gray-800 dark:text-gray-100 mb-4">${escapeHtml(question.text)}</p>
     <input type="text" id="answer-input" 
-           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
            placeholder="Your answer...">
   `;
   
@@ -86,7 +86,7 @@ function renderFillQuestion(question) {
   }
   
   questionContainer.innerHTML = `
-    <div class="fill-container text-xl text-gray-800">
+    <div class="fill-container text-xl text-gray-800 dark:text-gray-100">
       <span>${escapeHtml(parts[0])}</span>
       <input type="text" id="answer-input" 
              class="inline-input"
