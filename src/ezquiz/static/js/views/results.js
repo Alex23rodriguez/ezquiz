@@ -46,17 +46,20 @@ export function showResult(data) {
     }
   }
   
-  resultContainer.innerHTML = `
+  const correctBlock = isCorrect ? `
     <div class="${bgColor} border-l-4 ${borderColor} p-4 mb-4">
       <div class="flex items-center">
         <span class="text-2xl mr-3">${icon}</span>
         <div>
           <p class="font-bold ${textColor} text-lg">${message}</p>
           <p class="text-gray-600 dark:text-gray-400 mt-1">Your answer: <span class="font-semibold">${data.submitted_answer}</span></p>
-          ${!isCorrect ? `<p class="text-gray-600 dark:text-gray-400 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
         </div>
       </div>
     </div>
+  ` : '';
+
+  resultContainer.innerHTML = `
+    ${correctBlock}
     ${explanationHtml}
     <div class="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">Press Enter to continue</div>
   `;
