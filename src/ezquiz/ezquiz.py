@@ -31,7 +31,13 @@ class Q(Generic[T]):
             self.explain = explain
 
     @classmethod
-    def from_dict(cls, dct: dict, question_type: str = "simple", **kwargs):
+    def from_dict(cls, dct: dict, question_type: str = "simple", case_sensitive: bool = False, **kwargs):
+        def make_check():
+            if case_sensitive:
+                return lambda correct_ans, submitted_ans: str(correct_ans) == submitted_ans
+            else:
+                return lambda correct_ans, submitted_ans: str(correct_ans).lower() == submitted_ans.lower()
+        
         return cls(
             get_seed=lambda: choice(list(dct.keys())),
             ask=lambda seed: {
@@ -41,5 +47,6 @@ class Q(Generic[T]):
                 "hints": [],
             },
             correct=lambda seed: dct[seed],
+            check=make_check(),
             **kwargs,
         )
