@@ -1,11 +1,7 @@
 from random import choice
-from typing import Callable, Generic, Literal, TypedDict, TypeVar
+from typing import Callable, Generic, TypeVar
 
 T = TypeVar("T")
-
-Prompt = TypedDict("Prompt", {"type": Literal["text", "audio"], "value": str})
-
-Explain = TypedDict("Explain", {"type": Literal["text", "text_diff"], "value": str})
 
 
 class Q(Generic[T]):
@@ -15,7 +11,7 @@ class Q(Generic[T]):
         ask: Callable[[T], dict],
         correct: Callable[[T], str],
         check: Callable[[T, str], bool] | None = None,
-        explain: Callable[[T], Explain] | None = None,
+        explain: Callable[[T], dict] | None = None,
     ):
         self.get_seed = get_seed
         self.ask = ask
