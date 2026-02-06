@@ -118,7 +118,7 @@ function escapeHtml(text) {
  */
 function getAnswer() {
   const input = document.getElementById('answer-input');
-  return input ? input.value.trim() : '';
+  return input ? input.value : '';
 }
 
 /**
@@ -146,11 +146,6 @@ async function handleSubmit() {
   }
 
   const answer = getAnswer();
-  
-  if (!answer) {
-    alert('Please enter an answer');
-    return;
-  }
 
   try {
     const data = await submitAnswer(
