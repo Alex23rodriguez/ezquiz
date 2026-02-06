@@ -38,6 +38,8 @@ game.start(host="localhost", port=8000)
 
 Visit `http://localhost:8000/` to see the quiz lobby.
 
+> For a more advanced example of using custom functions to generate dynamic questions, see [examples/spanish_conj.py](examples/spanish_conj.py) which demonstrates Spanish verb conjugation with random subject-verb combinations and computed answers.
+
 ## Creating Questions
 
 ### Method 1: Using `from_dict` (Simple)
@@ -115,32 +117,6 @@ math_q = Q[tuple[int, int]](
 )
 ```
 
-#### Advanced Example: Spanish with Context
-
-Here's a more complex example with context and multiple question variants:
-
-```python
-from random import choice
-from ezquiz import Q
-
-# Define phrases with (question, answer, context)
-spanish_phrases = [
-    ("Mi [...] es John!", "nombre", "My name is John!"),
-    ("Hola, ¿cómo [...]?", "estás", "Hello, how are you?"),
-    ("Buenos [...]", "días", "Good morning"),
-]
-
-spanish_q = Q[tuple](
-    get_seed=lambda: choice(spanish_phrases),
-    ask=lambda seed: {
-        "text": seed[0],           # "Mi [...] es John!"
-        "type": "fill",
-        "context": seed[2],        # "My name is John!"
-    },
-    correct=lambda seed: seed[1],  # "nombre"
-)
-```
-
 ## Creating Multi-Quiz Servers
 
 Host multiple quizzes from a single server:
@@ -149,11 +125,6 @@ Host multiple quizzes from a single server:
 from ezquiz import APIGame, Q
 
 # Create different question sets
-math_qs = Q.from_dict({
-    "2 + 2 = [...]": "4",
-    "5 * 6 = [...]": "30",
-}, question_type="fill")
-
 geo_qs = Q.from_dict({
     "Capital of France?": "Paris",
     "Capital of Japan?": "Tokyo",
@@ -167,7 +138,6 @@ spanish_qs = Q.from_dict({
 # Create game and add quizzes
 game = APIGame()
 
-game.add_quiz("math", "Mathematics", {"problems": math_qs})
 game.add_quiz("geography", "World Geography", {"capitals": geo_qs})
 game.add_quiz("spanish", "Spanish 101", {"vocabulary": spanish_qs})
 
