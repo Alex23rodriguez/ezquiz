@@ -16,7 +16,7 @@ const resultContainer = document.getElementById('result-container');
  * @param {boolean} data.correct - Whether answer was correct
  * @param {string} data.submitted_answer - User's answer
  * @param {string} data.correct_answer - Correct answer
- * @param {string} data.explanation - Explanation or "{textdiff}"
+ * @param {Object} data.explanation - Explanation object with type and value
  */
 export function showResult(data) {
   questionContainer.classList.add('hidden');
@@ -29,18 +29,20 @@ export function showResult(data) {
   const icon = isCorrect ? '✓' : '✗';
   const message = isCorrect ? 'Correct!' : 'Incorrect';
   
-  // Check if explanation is textdiff placeholder
-  const isTextDiff = data.explanation === "{textdiff}";
-  
   let explanationHtml = '';
-  if (!isCorrect && isTextDiff) {
-    explanationHtml = `
-      <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
-        ${renderTextDiff(data.submitted_answer, data.correct_answer)}
-      </div>
-    `;
-  } else if (!isCorrect && data.explanation) {
-    explanationHtml = `<div class="bg-blue-50 border-l-4 border-blue-500 p-4"><p class="text-gray-700"><strong>Explanation:</strong> ${data.explanation}</p></div>`;
+  
+  if (!isCorrect && data.explanation) {
+    const exp = data.explanation;
+    
+    if (exp.type === "text_diff") {
+      explanationHtml = `
+        <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
+          ${renderTextDiff(data.submitted_answer, data.correct_answer)}
+        </div>
+      `;
+    } else if (exp.type === "text") {
+      explanationHtml = `<div class="bg-blue-50 border-l-4 border-blue-500 p-4"><p class="text-gray-700"><strong>Explanation:</strong> ${exp.value}</p></div>`;
+    }
   }
   
   resultContainer.innerHTML = `
@@ -50,7 +52,7 @@ export function showResult(data) {
         <div>
           <p class="font-bold ${textColor} text-lg">${message}</p>
           <p class="text-gray-600 mt-1">Your answer: <span class="font-semibold">${data.submitted_answer}</span></p>
-          ${!isCorrect && !isTextDiff ? `<p class="text-gray-600 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
+          ${!isCorrect ? `<p class="text-gray-600 mt-1">Correct answer: <span class="font-semibold">${data.correct_answer}</span></p>` : ''}
         </div>
       </div>
     </div>
