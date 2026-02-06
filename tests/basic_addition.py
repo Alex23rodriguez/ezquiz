@@ -45,7 +45,10 @@ MultQ = Q[tuple[int, int]](
     correct=correct_mult,
 )
 
-game = APIGame(
+game = APIGame()
+
+game.add_quiz(
+    "math",
     "Basic Math Test",
     {
         "addition": AddQ,
@@ -53,4 +56,4 @@ game = APIGame(
     },
 )
 
-game.start(host="localhost", port=8000, root_path="/test")
+game.start(host="localhost", port=8000)

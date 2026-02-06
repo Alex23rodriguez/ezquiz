@@ -67,7 +67,10 @@ MathContextQ = Q[tuple](
     correct=lambda seed: seed[1],
 )
 
-game = APIGame(
+game = APIGame()
+
+game.add_quiz(
+    "fill",
     "Fill Mode Test",
     {
         "misc_fill": MiscQ,
